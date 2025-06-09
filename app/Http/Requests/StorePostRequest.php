@@ -6,32 +6,57 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StorePostRequest extends FormRequest
 {
+    /**
+     * Determina si el usuario está autorizado para realizar esta solicitud.
+     * En este caso se permite siempre porque no hay autenticación aún.
+     *
+     * @return bool
+     */
     public function authorize(): bool
     {
-        return true; // Permitimos la petición (puedes modificarlo si necesitas auth luego)
+        return true; // Permitir siempre (modificable si se implementa auth)
     }
 
+    /**
+     * Reglas de validación para la creación de una publicación.
+     *
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [
+            // Título obligatorio, texto, máximo 255 caracteres
             'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
-            'location' => ['nullable', 'string'],
-            'tags' => ['required', 'string'], // Vendrá como string JSON
 
+            // Descripción obligatoria, sin límite de caracteres aquí
+            'description' => ['required', 'string'],
+
+            // Ubicación opcional
+            'location' => ['nullable', 'string'],
+
+            // Etiquetas requeridas (como string JSON, se decodifican en el controlador)
+            'tags' => ['required', 'string'],
+
+            // Tipo de recurso requerido, debe existir en la tabla resource_types
             'resource_type_id' => ['required', 'exists:resource_types,id'],
 
-            // Por ahora los colaboradores no los vamos a procesar, pero no rompe nada
+            // Colaboradores opcionales, deben ser un arreglo de IDs enteros
             'collaborators' => ['nullable', 'array'],
             'collaborators.*' => ['integer'],
 
-            // Esta parte es clave: Laravel espera múltiples archivos en arrays anidados
+            // Archivos adjuntos requeridos: estructura de array anidado
             'attached_files' => ['required', 'array'],
-            'attached_files.*.file' => ['required', 'file'],
-            'attached_files.*.alt_text' => ['nullable', 'string'],
+            'attached_files.*.file' => ['required', 'file'], // Cada elemento debe incluir un archivo válido
+            'attached_files.*.alt_text' => ['nullable', 'string'], // Texto alternativo opcional
         ];
     }
 
+    /**
+     * Mensajes personalizados para errores de validación.
+     * Estos se retornan al frontend si alguna regla no se cumple.
+     *
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [
