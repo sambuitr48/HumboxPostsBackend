@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Facades\Log;
+use App\Events\PostCreated;
 
 // Simulación de usuario autenticado (temporal hasta integrar sistema de usuarios real)
 define('DEFAULT_USER_ID', 1);
@@ -61,6 +62,8 @@ class PostController extends Controller
                 if (!empty($data['tags'])) {
                     $post->tags()->attach($data['tags']);
                 }
+
+                broadcast(new PostCreated($post))->toOthers();
 
                 // Obtener archivos adjuntos del request
                 $attachedFiles = $request->all()['attached_files'] ?? [];
