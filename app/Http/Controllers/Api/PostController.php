@@ -63,6 +63,7 @@ class PostController extends Controller
                     $post->tags()->attach($data['tags']);
                 }
 
+                // notificaciones en tiempo real
                 broadcast(new PostCreated($post))->toOthers();
 
                 // Obtener archivos adjuntos del request

@@ -7,6 +7,7 @@ use App\Models\PostLike;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
+use App\Events\PostLiked;
 
 // Simulación de usuario autenticado (en espera de integrar sistema real de usuarios)
 define('DEFAULT_USER_ID', 1);
@@ -37,8 +38,8 @@ class PostLikeController extends Controller
 
         // Buscar si el usuario ya le dio like al post
         $like = PostLike::where('post_id', $request->post_id)
-                        ->where('user_id', DEFAULT_USER_ID)
-                        ->first();
+            ->where('user_id', DEFAULT_USER_ID)
+            ->first();
 
         // Si ya le dio like, se elimina
         if ($like) {
@@ -50,8 +51,14 @@ class PostLikeController extends Controller
                 'post_id' => $request->post_id,
                 'user_id' => DEFAULT_USER_ID
             ]);
+
+            // notificaciones en tiempo real
+            broadcast(new PostLiked($like))->toOthers();
+
             return response()->json(['message' => 'Like agregado']);
         }
+
+
     }
 
     /**

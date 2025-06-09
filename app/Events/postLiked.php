@@ -2,31 +2,31 @@
 
 namespace App\Events;
 
-use App\Models\Post;
+use App\Models\PostLike;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\Channel;
 
-class PostCreated implements ShouldBroadcast
+class PostLiked implements ShouldBroadcast
 {
     use InteractsWithSockets, SerializesModels;
 
-    public $post;
+    public $like;
 
-    public function __construct(Post $post)
+    public function __construct(PostLike $like)
     {
-        $this->post = $post;
+        $this->like = $like;
     }
 
     public function broadcastOn()
     {
-        return new Channel('posts');
+        return new Channel('likes');
     }
 
     public function broadcastAs()
     {
-        return 'post.created';
+        return 'post.liked';
     }
 }

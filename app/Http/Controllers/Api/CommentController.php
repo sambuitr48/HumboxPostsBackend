@@ -8,6 +8,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
+use App\Events\CommentCreated;
 
 // Simulación de usuario autenticado (en espera de implementar autenticación real)
 define('DEFAULT_USER_ID', 1);
@@ -62,6 +63,9 @@ class CommentController extends Controller
             'user_id' => DEFAULT_USER_ID,
             'content' => $request->content,
         ]);
+
+        // notificaciones en tiempo real
+        broadcast(new CommentCreated($comment))->toOthers();
 
         // Respuesta exitosa con el comentario creado
         return response()->json([
