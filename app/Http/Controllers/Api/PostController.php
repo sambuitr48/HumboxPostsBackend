@@ -94,6 +94,7 @@ class PostController extends Controller
                                 throw new \Exception('La imagen debe tener al menos 640x480 px.');
                             }
 
+                            
                             // Validar tamaño máximo
                             if ($file->getSize() > 5 * 1024 * 1024) {
                                 throw new \Exception('La imagen supera los 5MB.');
