@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
+        use HasFactory;
+
     /**
      * Atributos que pueden ser asignados masivamente.
      * Permite crear o actualizar comentarios usando create([...]) o fill([...]).

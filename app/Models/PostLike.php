@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PostLike extends Model
 {
+        use HasFactory;
     /**
      * Atributos que se pueden asignar masivamente.
      * Se usa para permitir create([...]) o fill([...]).
